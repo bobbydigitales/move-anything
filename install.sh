@@ -20,7 +20,7 @@ USERNAME="ableton"
 INSTALL_DIR="/data/UserData/control_surface_move"
 BINARY_DIR="/opt/move"
 SHIM_PATH="/usr/lib/control_surface_move_shim.so"
-REPO_URL="https://github.com/bobbydigitales/control_surface_move/raw/main/"
+REPO_URL="https://github.com/bobbydigitales/move-anything/raw/main/"
 FILENAME="control_surface_move.tar.gz"
 VERSION_FILE="VERSION"
 
