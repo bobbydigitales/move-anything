@@ -208,7 +208,7 @@ generate_ssh_key() {
     fi
     
     print_status "Generating SSH key..."
-    if ssh-keygen -t ed25519 -f "$key_path" -N "" -C "move-anything-$(date +%Y%m%d)"; then
+    if ssh-keygen -t ed25519 -f "$key_path" -N "" -C "ableton-move-$(date +%Y%m%d)"; then
         print_success "SSH key generated successfully"
         return 0
     else
