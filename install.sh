@@ -354,8 +354,6 @@ install_package() {
     # Use the same method as the original installer
     if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "tar -xvf ./$FILENAME"; then
         print_error "Failed to extract package"
-        print_status "Debugging: checking file on Move..."
-        $SSH_ABLETON "$USERNAME@$HOSTNAME" "ls -la ./$FILENAME"
         exit 1
     fi
     
