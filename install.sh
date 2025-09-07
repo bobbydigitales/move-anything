@@ -350,24 +350,13 @@ install_package() {
     
     print_success "Package uploaded successfully"
     
-    # Verify the uploaded file
-    print_status "Verifying uploaded package..."
-    if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "file ./$FILENAME"; then
-        print_error "Failed to verify uploaded package"
-        exit 1
-    fi
-    
     print_status "Extracting package..."
-    # Try different extraction methods for compatibility
-    if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "tar -xzf ./$FILENAME"; then
-        print_warning "Standard tar extraction failed, trying alternative method..."
-        if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "gunzip -c ./$FILENAME | tar -xf -"; then
-            print_error "Failed to extract package with all methods"
-            print_status "Debugging: checking file on Move..."
-            $SSH_ABLETON "$USERNAME@$HOSTNAME" "ls -la ./$FILENAME"
-            $SSH_ABLETON "$USERNAME@$HOSTNAME" "file ./$FILENAME"
-            exit 1
-        fi
+    # Use the same method as the original installer
+    if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "tar -xvf ./$FILENAME"; then
+        print_error "Failed to extract package"
+        print_status "Debugging: checking file on Move..."
+        $SSH_ABLETON "$USERNAME@$HOSTNAME" "ls -la ./$FILENAME"
+        exit 1
     fi
     
     print_success "Package extracted successfully"
