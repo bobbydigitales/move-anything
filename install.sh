@@ -20,7 +20,7 @@ USERNAME="ableton"
 INSTALL_DIR="/data/UserData/control_surface_move"
 BINARY_DIR="/opt/move"
 SHIM_PATH="/usr/lib/control_surface_move_shim.so"
-REPO_URL="https://github.com/bobbydigitales/control_surface_move/raw/main/"
+REPO_URL="https://github.com/bobbydigitales/move-anything/raw/main/"
 FILENAME="control_surface_move.tar.gz"
 VERSION_FILE="VERSION"
 
@@ -296,17 +296,24 @@ download_package() {
         else
             print_status "Downloading from: $url"
             if ! curl -L -o "$FILENAME" "$url"; then
-                print_error "Failed to download package from $url"
-                print_warning "This might be because:"
-                echo "1. The package hasn't been uploaded to GitHub yet"
-                echo "2. You're not connected to the internet"
-                echo "3. The repository URL has changed"
-                echo ""
-                print_status "You can try:"
-                echo "1. Run './package.sh' to build the package locally"
-                echo "2. Use '--dev' flag to use local development mode"
-                echo "3. Check the repository for the latest release"
-                exit 1
+                print_warning "Failed to download from new repository, trying original..."
+                local fallback_url="https://github.com/bobbydigitales/control_surface_move/raw/main/$FILENAME"
+                print_status "Trying fallback URL: $fallback_url"
+                if ! curl -L -o "$FILENAME" "$fallback_url"; then
+                    print_error "Failed to download package from both repositories"
+                    print_warning "This might be because:"
+                    echo "1. The package hasn't been uploaded to GitHub yet"
+                    echo "2. You're not connected to the internet"
+                    echo "3. The repository URLs have changed"
+                    echo ""
+                    print_status "You can try:"
+                    echo "1. Run './package.sh' to build the package locally"
+                    echo "2. Use '--dev' flag to use local development mode"
+                    echo "3. Check the repository for the latest release"
+                    exit 1
+                else
+                    print_success "Downloaded from fallback repository"
+                fi
             fi
         fi
     fi
