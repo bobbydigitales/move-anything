@@ -198,24 +198,98 @@ check_ssh_access() {
     fi
 }
 
+# Generate SSH key if needed
+generate_ssh_key() {
+    local key_path="$HOME/.ssh/id_ed25519"
+    
+    if [ -f "$key_path" ]; then
+        print_status "SSH key already exists: $key_path"
+        return 0
+    fi
+    
+    print_status "Generating SSH key..."
+    if ssh-keygen -t ed25519 -f "$key_path" -N "" -C "move-anything-$(date +%Y%m%d)"; then
+        print_success "SSH key generated successfully"
+        return 0
+    else
+        print_error "Failed to generate SSH key"
+        return 1
+    fi
+}
+
+# Get SSH public key
+get_ssh_public_key() {
+    local key_path="$HOME/.ssh/id_ed25519.pub"
+    
+    if [ -f "$key_path" ]; then
+        cat "$key_path"
+        return 0
+    fi
+    
+    # Try RSA key as fallback
+    key_path="$HOME/.ssh/id_rsa.pub"
+    if [ -f "$key_path" ]; then
+        cat "$key_path"
+        return 0
+    fi
+    
+    return 1
+}
+
 # Setup SSH access
 setup_ssh() {
     print_header "SSH Setup Required"
     echo ""
     print_status "SSH access is required to install Move Anything."
     echo ""
-    print_warning "To set up SSH access:"
-    echo "1. Open your web browser"
-    echo "2. Go to: http://$HOSTNAME/development/ssh"
-    echo "3. Add your SSH public key"
+    
+    # Generate SSH key if needed
+    if ! generate_ssh_key; then
+        print_error "Could not generate SSH key automatically"
+        echo ""
+        print_warning "Please generate an SSH key manually:"
+        echo "   ssh-keygen -t ed25519 -C \"your_email@example.com\""
+        echo ""
+        read -p "Press Enter when you've generated your SSH key, or Ctrl+C to exit..."
+    fi
+    
+    # Get the public key
+    local public_key
+    if ! public_key=$(get_ssh_public_key); then
+        print_error "Could not find SSH public key"
+        print_warning "Please check that your SSH key exists at:"
+        echo "   ~/.ssh/id_ed25519.pub (or ~/.ssh/id_rsa.pub)"
+        exit 1
+    fi
+    
     echo ""
-    echo "If you don't have an SSH key, you can generate one with:"
-    echo "   ssh-keygen -t ed25519 -C \"your_email@example.com\""
-    echo ""
-    echo "Your public key is usually located at:"
-    echo "   ~/.ssh/id_ed25519.pub (or ~/.ssh/id_rsa.pub)"
+    print_status "Your SSH public key:"
+    echo "----------------------------------------"
+    echo "$public_key"
+    echo "----------------------------------------"
     echo ""
     
+    print_warning "To complete SSH setup:"
+    echo "1. Open your web browser"
+    echo "2. Go to: http://$HOSTNAME/development/ssh"
+    echo "3. Copy and paste the public key above"
+    echo "4. Click 'Add Key'"
+    echo ""
+    
+    # Try to open the browser automatically
+    if command -v open &> /dev/null; then
+        print_status "Attempting to open SSH setup page in your browser..."
+        if open "http://$HOSTNAME/development/ssh" 2>/dev/null; then
+            print_success "SSH setup page opened in browser"
+        fi
+    elif command -v xdg-open &> /dev/null; then
+        print_status "Attempting to open SSH setup page in your browser..."
+        if xdg-open "http://$HOSTNAME/development/ssh" 2>/dev/null; then
+            print_success "SSH setup page opened in browser"
+        fi
+    fi
+    
+    echo ""
     read -p "Press Enter when you've added your SSH key, or Ctrl+C to exit..."
     
     if check_ssh_access; then
