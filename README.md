@@ -62,25 +62,55 @@ Move Control Surface
 
 4. As a bonus, there's an additional option to install "pages of sets" that gives you unlimited pages of sets on the Ableton Move.
 
-## Installation (macos, Linux)
-1. Back up all your sets. I haven't lost any data, but I also make no guarantees that you won't!
+## Installation
 
-2. Set up SSH on your move by adding an SSH key to http://move.local/development/ssh.
+### Quick Start (macOS & Linux)
+1. **Back up your sets** - While we haven't lost any data, it's always good to be safe!
 
-3. Turn on your Move and make sure it's connected to the same network as the device you're using to install.
+2. **Turn on your Move** and make sure it's connected to the same network as your computer.
 
-4. The installer is currently a bash script. On macos (and probably Linux) you can just paste this into a terminal:
+3. **Run the installer**:
+   ```bash
+   curl -L https://raw.githubusercontent.com/bobbydigitales/move-anything/main/install.sh | sh
+   ```
+
+That's it! The installer will automatically:
+- ✅ Check your network connection to the Move
+- ✅ Generate SSH keys if needed
+- ✅ Guide you through SSH setup
+- ✅ Download and install Move Anything
+- ✅ Optionally install "Pages of Sets" feature
+
+### Installation Options
+The installer supports several options:
 
 ```bash
-curl -L https://raw.githubusercontent.com/bobbydigitales/control_surface_move/main/installer/install.sh | sh
+# Full installation with SSH setup
+./install.sh
+
+# Skip SSH setup (if already configured)
+./install.sh --skip-ssh
+
+# Force overwrite existing installation
+./install.sh --force
+
+# Development mode (use local package)
+./install.sh --dev
+
+# Show help
+./install.sh --help
 ```
 
-And it'll download the latest build and install it on your Move. 
+### Windows Installation
+On Windows, you can use Git Bash (comes with Git for Windows):
+1. Install Git for Windows: https://git-scm.com/downloads/win
+2. Launch Git Bash
+3. Run the installer command above
 
-5. The installer will ask you if you want to install "pages of sets" which is an optional bonus feature that gives you unlimited pages of sets on the move by holding shift(...) and pressing the left or right buttons. The default is to not install. You can install later by running the installer again. _**In the current build, it will rearrange your sets and change their colors! You have been warned!**_ (I will try and fix this though)
+### Pages of Sets Feature
+The installer will ask if you want to install "Pages of Sets" - an optional feature that gives you unlimited pages of sets on the Move by holding Shift + Left/Right arrows. 
 
-## Installation Windows
-If you're on Windows, you can get bash by installing Git Bash, can you get that by installing Git for Windows): https://git-scm.com/downloads/win. Once you have that, launch Bash and then run the install script as above!
+⚠️ **Warning**: This feature rearranges your sets and changes their colors. You can install it later by running the installer again.
 
 ## Usage of the M8 Launchpad Pro emulation
 <img width="5664" height="2788" alt="move_LPP_instructions_v2" src="https://github.com/user-attachments/assets/27d0cf29-35be-4c64-9fc2-52d3f33686dd" />
