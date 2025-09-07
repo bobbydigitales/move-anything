@@ -358,13 +358,16 @@ install_package() {
     fi
     
     print_status "Extracting package..."
+    # Try different extraction methods for compatibility
     if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "tar -xzf ./$FILENAME"; then
-        print_error "Failed to extract package"
-        print_status "Debugging: checking file on Move..."
-        $SSH_ABLETON "$USERNAME@$HOSTNAME" "ls -la ./$FILENAME"
-        $SSH_ABLETON "$USERNAME@$HOSTNAME" "file ./$FILENAME"
-        $SSH_ABLETON "$USERNAME@$HOSTNAME" "hexdump -C ./$FILENAME | head -5"
-        exit 1
+        print_warning "Standard tar extraction failed, trying alternative method..."
+        if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "gunzip -c ./$FILENAME | tar -xf -"; then
+            print_error "Failed to extract package with all methods"
+            print_status "Debugging: checking file on Move..."
+            $SSH_ABLETON "$USERNAME@$HOSTNAME" "ls -la ./$FILENAME"
+            $SSH_ABLETON "$USERNAME@$HOSTNAME" "file ./$FILENAME"
+            exit 1
+        fi
     fi
     
     print_success "Package extracted successfully"
