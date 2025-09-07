@@ -350,9 +350,20 @@ install_package() {
     
     print_success "Package uploaded successfully"
     
+    # Verify the uploaded file
+    print_status "Verifying uploaded package..."
+    if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "file ./$FILENAME"; then
+        print_error "Failed to verify uploaded package"
+        exit 1
+    fi
+    
     print_status "Extracting package..."
     if ! $SSH_ABLETON "$USERNAME@$HOSTNAME" "tar -xzf ./$FILENAME"; then
         print_error "Failed to extract package"
+        print_status "Debugging: checking file on Move..."
+        $SSH_ABLETON "$USERNAME@$HOSTNAME" "ls -la ./$FILENAME"
+        $SSH_ABLETON "$USERNAME@$HOSTNAME" "file ./$FILENAME"
+        $SSH_ABLETON "$USERNAME@$HOSTNAME" "hexdump -C ./$FILENAME | head -5"
         exit 1
     fi
     
