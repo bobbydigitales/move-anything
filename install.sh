@@ -83,7 +83,7 @@ USAGE:
 OPTIONS:
     --skip-ssh        Skip SSH setup (if already configured)
     --force           Force overwrite existing installation
-    --dev             Development mode (use local files)
+    --dev             Development mode (use local package)
     --verbose         Show detailed output
     --help            Show this help message
 
@@ -91,7 +91,7 @@ EXAMPLES:
     $0                    # Full installation with SSH setup
     $0 --skip-ssh         # Install without SSH setup
     $0 --force            # Force overwrite existing installation
-    $0 --dev              # Development installation
+    $0 --dev              # Development installation (requires local package)
 
 FEATURES:
     - Automatic SSH setup guidance
@@ -286,26 +286,46 @@ download_package() {
         print_status "Development mode: using local package"
         if [ ! -f "$FILENAME" ]; then
             print_error "Development mode requires $FILENAME to be present in current directory"
-            print_status "Run './build.sh' first to create the package"
+            print_status "Run './package.sh' first to create the package"
             exit 1
         fi
     else
-        print_status "Downloading from: $url"
-        if ! curl -L -o "$FILENAME" "$url"; then
-            print_error "Failed to download package"
-            print_warning "Check your internet connection and try again"
-            exit 1
+        # Check if package already exists locally first
+        if [ -f "$FILENAME" ]; then
+            print_status "Using existing local package: $FILENAME"
+        else
+            print_status "Downloading from: $url"
+            if ! curl -L -o "$FILENAME" "$url"; then
+                print_error "Failed to download package from $url"
+                print_warning "This might be because:"
+                echo "1. The package hasn't been uploaded to GitHub yet"
+                echo "2. You're not connected to the internet"
+                echo "3. The repository URL has changed"
+                echo ""
+                print_status "You can try:"
+                echo "1. Run './package.sh' to build the package locally"
+                echo "2. Use '--dev' flag to use local development mode"
+                echo "3. Check the repository for the latest release"
+                exit 1
+            fi
         fi
     fi
     
-    # Verify download
+    # Verify package
     if [ ! -f "$FILENAME" ]; then
-        print_error "Package download failed"
+        print_error "Package not found"
+        exit 1
+    fi
+    
+    # Test if the package is valid
+    if ! tar -tzf "$FILENAME" &> /dev/null; then
+        print_error "Package appears to be corrupted or invalid"
+        print_warning "Try downloading again or building locally with './package.sh'"
         exit 1
     fi
     
     local file_size=$(du -h "$FILENAME" | cut -f1)
-    print_success "Package downloaded successfully ($file_size)"
+    print_success "Package ready ($file_size)"
     
     if [ "$VERBOSE" = true ]; then
         print_status "Package MD5: $(md5sum "$FILENAME" | cut -d' ' -f1)"
