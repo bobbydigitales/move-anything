@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     'build/control_surface_move_shim.so'
+relocations:     []
+...
