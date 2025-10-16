@@ -125,7 +125,7 @@ const neutralColorSweep = [0, 124, 123, 120];
 const rainbowColorSweep = [33, 16, 15, 14, 11, 8, 3, 2];
 
 function getColorForKnobValue(value = 0) {
-    const colorSweep = synthwaveColorSweep;
+    const colorSweep = neutralColorSweep;
 
     const level = clamp(value, 0, 127) / 127;
     const index = Math.round(level * (colorSweep.length - 1));
