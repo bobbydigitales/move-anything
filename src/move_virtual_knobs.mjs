@@ -119,6 +119,20 @@ RGB COLOR PALETTE (INDEXED 0–127)
 ================================================================================
 */
 
+const synthwaveColorSweep = [0, 104, 105, 20, 21, 23, 26, 25];
+const roseColorSweep = [0, 124, 35, 23, 26, 25];
+const neutralColorSweep = [0, 124, 123, 120];
+const rainbowColorSweep = [33, 16, 15, 14, 11, 8, 3, 2];
+
+function getColorForKnobValue(value = 0) {
+    const colorSweep = synthwaveColorSweep;
+
+    const level = clamp(value, 0, 127) / 127;
+    const index = Math.round(level * (colorSweep.length - 1));
+
+    return colorSweep[index];
+}
+
 
 export function handleMoveKnobs(data, channel = 3) {
 
@@ -153,7 +167,7 @@ export function handleMoveKnobs(data, channel = 3) {
         console.log(`Sending CC ${moveControlNumber} value: ${knobs[knob]}`);
         move_midi_external_send([2 << 4 | 0xb, 0xb0 | channel, moveControlNumber, knobs[knob]]);
         
-        move_midi_internal_send([0 << 4 | 0xb, 0xb0 | 0,          moveControlNumber, knobs[knob]]);
+        move_midi_internal_send([0 << 4 | 0xb, 0xb0 | 0, moveControlNumber, getColorForKnobValue(knobs[knob])]);
         return true;
     }
 
