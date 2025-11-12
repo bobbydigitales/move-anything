@@ -109,7 +109,6 @@ static JSValue js_get_int16(JSContext *ctx, JSValueConst this_val, int argc, JSV
   int16_t val = get_int16(byte);
   JSValue js_val = JS_NewInt32(ctx, val);
   return js_val;
-  return JS_UNDEFINED;
 }
 
 
