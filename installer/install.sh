@@ -32,7 +32,7 @@ filename=control_surface_move.tar.gz
 hostname=move.local
 username=ableton
 ssh_ableton="ssh -o LogLevel=QUIET -n $username@$hostname"
-
+scp_ableton="scp -o ConnectTimeout=1"
 ssh_root="ssh -o LogLevel=QUIET -n root@$hostname"
 
 echo "Downloading build...$url$filename"
@@ -50,7 +50,7 @@ then
 fi
 
 # $ssh_ableton rm -fr ./control_surface_move
-scp  -o ConnectTimeout=1 $filename ableton@move.local:.
+$scp_ableton "$filename $username@$hostname:."
 $ssh_ableton "tar -xvf ./$filename"
 
 $ssh_ableton "killall MoveLauncher Move MoveOriginal"
