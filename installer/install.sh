@@ -43,9 +43,12 @@ echo "Connecting via ssh to $ssh_ableton..."
 if ! $ssh_ableton -o ConnectTimeout=1 ls &> /dev/null
 then
     echo
-    echo "Error: Could not connect to move.local using SSH."
+    echo "Error: Could not connect to $hostname using SSH."
     echo "Check that your Move is connected to the same network as this device"
     echo "and that you have added your keys at http://move.local/development/ssh"
+    echo
+    echo "If your Move was updated, or its keys changed, you may have to remove"
+    echo "entries for it in your known_hosts file."
     exit
 fi
 
