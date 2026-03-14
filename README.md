@@ -3,6 +3,14 @@
 
 # <ins>Move Anything (previously Move Control Surface)</ins>
 
+# Licensing and AI restrictions.
+1. Everything in this repository is covered by the CC BY-NC-SA 4.0 license and the additional terms below listed in sections 2 and 3.
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+2. In adition to the terms in the above license, if you wish to train an AI model of any kind using this code, you must receive explicit permission. To make a request, please email spam@anderberg.co.uk with the subject "Request to train AI model on move-anything repository". You are only allowed to train based on receiving an approval from that address.
+
+3. AI models may not be used to create Adapted Material (as defined in CC BY-NC-SA 4.0) based on this work.
+
 ## What is this project?
 Move Anything is a framework that lets you write your own code for the Ableton Move. It gives you access to:
 * The pads (note number, velocity, and polyphonic aftertouch values)
