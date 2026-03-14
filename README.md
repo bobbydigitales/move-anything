@@ -11,6 +11,10 @@ https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 3. AI models may not be used to create Adapted Material (as defined in CC BY-NC-SA 4.0) based on this work.
 
+# AI code contributions, AI code review and comments.
+1. This project does not accept code contributions created in whole or in part using AI.
+2. This project does not accept comments or PR reviews created using AI.
+
 ## What is this project?
 Move Anything is a framework that lets you write your own code for the Ableton Move. It gives you access to:
 * The pads (note number, velocity, and polyphonic aftertouch values)
